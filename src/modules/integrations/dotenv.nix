@@ -3,7 +3,7 @@
 let
   cfg = config.dotenv;
 
-  dotenvPath = config.devenv.root + "/" + cfg.filename;
+  dotenvPath = config.env.DEVENV_ROOT + "/" + cfg.filename;
 
   dotenvFound = lib.pathExists dotenvPath;
   parseLine = line:
@@ -55,7 +55,7 @@ in
       {
         enterShell = ''
           echo "💡 A ${cfg.filename} file was not found, while dotenv integration is enabled."
-          echo 
+          echo
           ${lib.optionalString exampleExists ''
             echo "   To create .env, you can copy the example file:"
             echo
@@ -71,7 +71,7 @@ in
     (lib.mkIf (!cfg.enable && !cfg.disableHint) {
       enterShell = lib.optionalString dotenvFound ''
         echo "💡 A ${cfg.filename} file found, while dotenv integration is currently not enabled."
-        echo 
+        echo
         echo "   To enable it, add \`dotenv.enable = true;\` to your devenv.nix file.";
         echo "   To disable this hint, add \`dotenv.disableHint = true;\` to your devenv.nix file.";
         echo
