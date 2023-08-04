@@ -105,6 +105,14 @@ in
         display a warning message when a renamed option is used.
       '';
     };
+
+    devenv = {
+      profile = lib.mkOption {
+        type = types.package;
+        internal = true;
+      };
+
+    };
   };
 
   imports = [
@@ -135,6 +143,7 @@ in
           See https://devenv.sh/guides/using-with-flakes/
         ''
       else pwd;
+    devenv.profile = profile;
     env.DEVENV_DOTFILE = config.env.DEVENV_ROOT + "/.devenv";
     env.DEVENV_STATE = config.env.DEVENV_DOTFILE + "/state";
     env.DEVENV_PROFILE = profile;
