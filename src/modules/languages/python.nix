@@ -15,25 +15,6 @@ let
     # Make sure any tools are not attempting to use the python interpreter from any
     # existing virtual environment. For instance if devenv was started within an venv.
     unset VIRTUAL_ENV
-
-    if [ ! -L ${venvPath}/devenv-profile ] \
-    || [ "$(${pkgs.coreutils}/bin/readlink ${venvPath}/devenv-profile)" != "${config.env.DEVENV_PROFILE}" ]
-    then
-      if [ -d "$VENV_PATH" ]
-      then
-        echo "Rebuilding Python venv..."
-        ${pkgs.coreutils}/bin/rm -rf "$VENV_PATH"
-      fi
-      ${lib.optionalString cfg.poetry.enable ''
-        [ -f "${config.env.DEVENV_STATE}/poetry.lock.checksum" ] && rm ${config.env.DEVENV_STATE}/poetry.lock.checksum
-      ''}
-      ${cfg.package.interpreter} -m venv ${venvPath}
-      ${pkgs.coreutils}/bin/ln -sf ${config.env.DEVENV_PROFILE} ${venvPath}/devenv-profile
-    fi
-    source "$VENV_PATH"/bin/activate
-    ${lib.optionalString (cfg.venv.requirements != null) ''
-      "$VENV_PATH"/bin/pip install -r ${pkgs.writeText "requirements.txt" cfg.venv.requirements}
-    ''}
   '';
 
   initPoetryScript = pkgs.writeShellScript "init-poetry.sh" ''
