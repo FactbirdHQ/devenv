@@ -81,9 +81,9 @@ in
       pre-commit.tools.clippy = lib.mkDefault cfg.toolchain.clippy or null;
     })
     (lib.mkIf (cfg.enable && pkgs.stdenv.isDarwin) {
-      env.RUSTFLAGS = [ "-L framework=${config.devenv.profile}/Library/Frameworks" ];
-      env.RUSTDOCFLAGS = [ "-L framework=${config.devenv.profile}/Library/Frameworks" ];
-      env.CFLAGS = [ "-iframework ${config.devenv.profile}/Library/Frameworks" ];
+      env.RUSTFLAGS = [ "-L framework=${config.env.DEVENV_PROFILE}/Library/Frameworks" ];
+      env.RUSTDOCFLAGS = [ "-L framework=${config.env.DEVENV_PROFILE}/Library/Frameworks" ];
+      env.CFLAGS = [ "-iframework ${config.env.DEVENV_PROFILE}/Library/Frameworks" ];
     })
     (lib.mkIf (cfg.channel != "nixpkgs") (
       let

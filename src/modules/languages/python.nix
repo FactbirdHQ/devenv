@@ -16,10 +16,8 @@ let
     # existing virtual environment. For instance if devenv was started within an venv.
     unset VIRTUAL_ENV
 
-    VENV_PATH="${config.env.DEVENV_STATE}/venv"
-
-    if [ ! -L "$VENV_PATH"/devenv-profile ] \
-    || [ "$(${pkgs.coreutils}/bin/readlink "$VENV_PATH"/devenv-profile)" != "${config.devenv.profile}" ]
+    if [ ! -L ${venvPath}/devenv-profile ] \
+    || [ "$(${pkgs.coreutils}/bin/readlink ${venvPath}/devenv-profile)" != "${config.env.DEVENV_PROFILE}" ]
     then
       if [ -d "$VENV_PATH" ]
       then
@@ -29,8 +27,8 @@ let
       ${lib.optionalString cfg.poetry.enable ''
         [ -f "${config.env.DEVENV_STATE}/poetry.lock.checksum" ] && rm ${config.env.DEVENV_STATE}/poetry.lock.checksum
       ''}
-      ${cfg.package.interpreter} -m venv "$VENV_PATH"
-      ${pkgs.coreutils}/bin/ln -sf ${config.devenv.profile} "$VENV_PATH"/devenv-profile
+      ${cfg.package.interpreter} -m venv ${venvPath}
+      ${pkgs.coreutils}/bin/ln -sf ${config.env.DEVENV_PROFILE} ${venvPath}/devenv-profile
     fi
     source "$VENV_PATH"/bin/activate
     ${lib.optionalString (cfg.venv.requirements != null) ''
