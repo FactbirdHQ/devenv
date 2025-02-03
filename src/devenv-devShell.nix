@@ -19,7 +19,7 @@ pkgs.writeScriptBin "devenv" ''
 
   case $command in
     up)
-      procfilescript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-up' --no-link --print-out-paths --override-input devenv-root path:.devenv/state/pwd)
+      procfilescript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-up' --no-link --print-out-paths --override-input devenv-root path:$(realpath .devenv/state/pwd))
       if [ "$(cat $procfilescript|tail -n +2)" = "" ]; then
         echo "No 'processes' option defined: https://devenv.sh/processes/"
         exit 1
@@ -29,7 +29,7 @@ pkgs.writeScriptBin "devenv" ''
       ;;
 
     test)
-      testscript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-test' --no-link --print-out-paths --override-input devenv-root path:.devenv/state/pwd)    
+      testscript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-test' --no-link --print-out-paths --override-input devenv-root path:$(realpath .devenv/state/pwd))
       exec $testscript "$@"
       ;;
   
