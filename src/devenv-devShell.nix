@@ -19,7 +19,7 @@ pkgs.writeScriptBin "devenv" ''
 
   case $command in
     up)
-      procfilescript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-up' --no-link --print-out-paths --override-input devenv-root path:$(realpath .devenv/state/pwd))
+      procfilescript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-up' --no-link --print-out-paths --override-input env path:$(realpath .devenv/state/env))
       if [ "$(cat $procfilescript|tail -n +2)" = "" ]; then
         echo "No 'processes' option defined: https://devenv.sh/processes/"
         exit 1
@@ -29,17 +29,17 @@ pkgs.writeScriptBin "devenv" ''
       ;;
 
     test)
-      testscript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-test' --no-link --print-out-paths --override-input devenv-root path:$(realpath .devenv/state/pwd))
+      testscript=$(nix build '.#${shellPrefix (config._module.args.name or "default")}devenv-test' --no-link --print-out-paths --override-input env path:$(realpath .devenv/state/env))
       exec $testscript "$@"
       ;;
-  
+
     version)
       echo "devenv: ${version}"
       ;;
 
     *)
       echo "https://devenv.sh (version ${version}): Fast, Declarative, Reproducible, and Composable Developer Environments"
-      echo 
+      echo
       echo "This is a flake integration wrapper that comes with a subset of functionality from the flakeless devenv CLI."
       echo
       echo "Usage: devenv command"
